@@ -2,12 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Simulador de Cajero Automático</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Cajero</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Simulador de Cajero Automático</h1>
-  <p>Este simulador permite iniciar sesión con usuario y PIN, y realizar operaciones básicas como consultar saldo, retirar y depositar dinero.</p>
+  <h1>Simulador de Cajero</h1>
 
-    <script src="./cajero.js"></script>
+  <div id="login-section">
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="password" id="pin" placeholder="PIN">
+    <button id="login-btn">Ingresar</button>
+    <p id="login-msg"></p>
+  </div>
+
+  <div id="menu-section" style="display: none;">
+    <p id="welcome-msg"></p>
+    <button onclick="consultarSaldo()">Consultar saldo</button>
+    <button onclick="mostrarRetiro()">Retirar dinero</button>
+    <button onclick="mostrarDeposito()">Depositar dinero</button>
+    <button onclick="logout()">Salir</button>
+
+    <div id="accion-section"></div>
+  </div>
+
+  <script src="cajero.js"></script>
 </body>
 </html>
