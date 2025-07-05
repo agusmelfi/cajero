@@ -1,33 +1,32 @@
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [
-  { nombre: "agustin", pin: "1234", saldo: 10000 },
-  { nombre: "lucia", pin: "5678", saldo: 7500 },
-  { nombre: "max", pin: "0101", saldo: 15000 }
-];
 
+let usuarios = [];
 let usuarioActual = null;
+
+// Cargar usuarios desde usuarios.json
+fetch('usuarios.json')
+  .then(res => res.json())
+  .then(data => {
+    usuarios = data;
+  });
 
 document.getElementById("login-btn").addEventListener("click", () => {
   const nombre = document.getElementById("nombre").value.toLowerCase();
   const pin = document.getElementById("pin").value;
 
-  const usuario = usuarios.find(u => u.nombre == nombre && u.pin == pin);
-  const msg = document.getElementById("login-msg");
+  const usuario = usuarios.find(u => u.nombre === nombre && u.pin === pin);
 
   if (usuario) {
     usuarioActual = usuario;
     document.getElementById("login-section").style.display = "none";
     document.getElementById("menu-section").style.display = "block";
     document.getElementById("welcome-msg").textContent = `Bienvenido/a ${usuarioActual.nombre}`;
-    msg.textContent = "";
   } else {
-    msg.textContent = "Credenciales incorrectas";
+    Swal.fire("Error", "Credenciales incorrectas", "error");
   }
 });
 
 function consultarSaldo() {
-  document.getElementById("accion-section").innerHTML = `
-    <p>Tu saldo actual es: $${usuarioActual.saldo}</p>
-  `;
+  document.getElementById("accion-section").innerHTML = `<p>Tu saldo actual es: $${usuarioActual.saldo}</p>`;
 }
 
 function mostrarRetiro() {
@@ -49,13 +48,13 @@ function retirarDinero() {
   const seccion = document.getElementById("accion-section");
 
   if (isNaN(monto) || monto <= 0) {
-    seccion.innerHTML += `<p>Monto inválido</p>`;
+    Swal.fire("Error", "Monto inválido", "warning");
   } else if (monto > usuarioActual.saldo) {
-    seccion.innerHTML += `<p>Fondos insuficientes</p>`;
+    Swal.fire("Fondos insuficientes", "No tenés saldo suficiente", "error");
   } else {
     usuarioActual.saldo -= monto;
-    actualizarUsuarios();
-    seccion.innerHTML += `<p>Retiro exitoso. Saldo restante: $${usuarioActual.saldo}</p>`;
+    guardarCambios();
+    Swal.fire("Éxito", `Retiro exitoso. Saldo restante: $${usuarioActual.saldo}`, "success");
   }
 }
 
@@ -64,15 +63,15 @@ function depositarDinero() {
   const seccion = document.getElementById("accion-section");
 
   if (isNaN(monto) || monto <= 0) {
-    seccion.innerHTML += `<p>Monto inválido</p>`;
+    Swal.fire("Error", "Monto inválido", "warning");
   } else {
     usuarioActual.saldo += monto;
-    actualizarUsuarios();
-    seccion.innerHTML += `<p>Depósito exitoso. Saldo actual: $${usuarioActual.saldo}</p>`;
+    guardarCambios();
+    Swal.fire("Éxito", `Depósito exitoso. Saldo actual: $${usuarioActual.saldo}`, "success");
   }
 }
 
-function actualizarUsuarios() {
+function guardarCambios() {
   const index = usuarios.findIndex(u => u.nombre === usuarioActual.nombre);
   usuarios[index] = usuarioActual;
   localStorage.setItem("usuarios", JSON.stringify(usuarios));

@@ -1,0 +1,5 @@
+[
+  { "nombre": "agustin", "pin": "1234", "saldo": 10000 },
+  { "nombre": "lucia", "pin": "5678", "saldo": 7500 },
+  { "nombre": "max", "pin": "0101", "saldo": 15000 }
+]
